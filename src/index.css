@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+#main_grid {
+	margin-top: 50px;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.contact_table {
+	padding: 5px 20px 5px 20px;
+	text-align: left;
+}
+
+.contact {	
+	margin-top: 5px;
+	margin-bottom: 5px;	
+}
+
+#messager {
+	margin-top: 100px;
+}
