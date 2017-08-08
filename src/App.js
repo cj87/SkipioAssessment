@@ -21,29 +21,27 @@ class ContactList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      contact_data: [],  
-      selected_contact: {}    
+      contact_data: [],
+      selected_contact: {}
     }
     this.select_contact = this.select_contact.bind(this);
   }
 
-  componentWillMount() {    
-    return $.ajax({        
+  componentWillMount() {
+    return $.ajax({
         url: "https://stage.skipio.com/api/v2/contacts?token=" + global_token + "&page=1&per=100",
         type: "GET",
         dataType: "json"
     })
     .done( (response) => {
       this.setState({contact_data: response.data});
-      console.log(response);
     })
-    .fail( (response) => {    
-        console.log(response);
+    .fail( (response) => {
         alert("Error: failed to retrieve contact list.");
     })
   }
 
-  select_contact(contact, index) {    
+  select_contact(contact, index) {
     this.setState({selected_index: index, selected_contact: contact});
   }
 
@@ -83,29 +81,29 @@ class ContactView extends Component {
     this.handle_click = this.handle_click.bind(this);
   }
 
-  handle_click() {        
+  handle_click() {
     this.props.onClick(this.props.contact, this.props.index);
   }
 
-  render() {    
+  render() {
     let contact = this.props.contact;
     let button_style = this.props.selected ? "primary" : "default";
     return (
       <rbs.Button bsStyle={button_style} block onClick={this.handle_click}>
-        <table> 
+        <table>
           <thead>
             <tr>
               <th className="contact_table">Name</th>
               <th className="contact_table">Email</th>
-              <th className="contact_table">Phone</th>                
+              <th className="contact_table">Phone</th>    
             </tr>
           </thead>
           <tbody>
             <tr>
               <td className="contact_table">{contact.full_name}</td>
-              <td className="contact_table">{contact.email}</td>            
-              <td className="contact_table">{contact.phone_mobile}</td>                
-            </tr>   
+              <td className="contact_table">{contact.email}</td>
+              <td className="contact_table">{contact.phone_mobile}</td>
+            </tr>
           </tbody>
         </table>
       </rbs.Button>
@@ -123,11 +121,11 @@ class Messager extends Component {
     this.handle_text_change = this.handle_text_change.bind(this);
   }
 
-  handle_text_change(e) {    
+  handle_text_change(e) {
     this.setState({message_text: e.target.value})
   }
 
-  send_message() {
+  send_message(e) {
     let recipient = "contact-" + this.props.contact.id;
     let data = {
       recipients: [
@@ -138,20 +136,20 @@ class Messager extends Component {
       }
     };
 
+    this.setState({message_text: ""});
 
-    return $.ajax({        
+    return $.ajax({
         url: "https://stage.skipio.com/api/v2/messages?token=" + global_token,
         type: "POST",
         data: JSON.stringify(data),
-        dataType: "json", 
-        contentType: "application/json"
+        contentType: "application/json",
+        dataType: "text"
     })
-    .done( (response) => {
-      console.log(response);      
+    .done(function() {
+      alert("Success: message sent.");
     })
-    .fail( (response) => {        
-        console.log(response);
-        alert("Error: failed to send SMS message.");
+    .fail(function() {
+      alert("Error: couldn't send message.");
     })
   }
 
@@ -159,7 +157,7 @@ class Messager extends Component {
     if ($.isEmptyObject(this.props.contact)) {
       return <div></div>;
     }
-
+    
     return (
       <div>
         <rbs.FormGroup controlId="formControlsTextarea">
